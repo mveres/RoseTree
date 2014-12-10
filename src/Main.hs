@@ -12,6 +12,7 @@ main = do
     print $ size . head . children $ tree'
     print $ product (map leaves (children tree'))
     print $ (*) (leaves . head . children . head . children $ xs) (product . map size . children . head . drop 2 . children $ xs)
+    print $ fmap (+1) (1 :> [])
 
 ------------------------------------------------------------------------------------------------------------------------------
 -- ROSE TREES, FUNCTORS, MONOIDS, FOLDABLES
