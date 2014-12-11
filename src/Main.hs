@@ -9,6 +9,8 @@ main = do
     print $ round . root . head . children . fmap (\x -> if x > 0.5 then x else 0) $ fmap (\x -> sin(fromIntegral x)) xs
     print $ unProduct (Product 6 `mappend` (Product . unSum $ Sum 3 `mappend` Sum 4))
     print $ unSum (mappend (Sum 5) (Sum (unProduct (mappend (Product (unSum num2)) (mappend (Product (unSum num1)) (mappend mempty (mappend (Product 2) (Product 3))))))))
+    print $ foldl (*) 1 $ toList tree14 -- ???
+    print $ unProduct $ fold tree14' -- ???
 
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -102,13 +104,13 @@ class Functor f => Foldable f where
   foldMap :: Monoid m => (a -> m) -> (f a -> m)
   foldMap = error "you have to implement foldMap"
 
--- instance Rose a => Monoid (Rose a) where
---     mempty = 
-
 toList (r :> rs) = r : (concat $ map toList rs)
 
 instance Foldable Rose where
   fold rose = foldr (mappend) mempty $ toList rose
+
+tree14 = 1 :> [2 :> [], 3 :> [4 :> []]]
+tree14' = fmap Product tree
 
 sumxs = Sum 0 :> [Sum 13 :> [Sum 26 :> [Sum (-31) :> [Sum (-45) :> [], Sum 23 :> []]]], Sum 27 :> [], Sum 9 :> [Sum 15 :> [Sum 3 :> [Sum (-113) :> []], Sum 1 :> []], Sum 71 :> [Sum 55 :> []]]]
 
