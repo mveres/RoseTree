@@ -102,8 +102,13 @@ class Functor f => Foldable f where
   foldMap :: Monoid m => (a -> m) -> (f a -> m)
   foldMap = error "you have to implement foldMap"
 
+-- instance Rose a => Monoid (Rose a) where
+--     mempty = 
+
+toList (r :> rs) = r : (concat $ map toList rs)
+
 instance Foldable Rose where
-  fold (= error "you have to implement fold for Rose"
+  fold rose = foldr (mappend) mempty $ toList rose
 
 sumxs = Sum 0 :> [Sum 13 :> [Sum 26 :> [Sum (-31) :> [Sum (-45) :> [], Sum 23 :> []]]], Sum 27 :> [], Sum 9 :> [Sum 15 :> [Sum 3 :> [Sum (-113) :> []], Sum 1 :> []], Sum 71 :> [Sum 55 :> []]]]
 
