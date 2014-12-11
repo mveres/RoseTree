@@ -7,6 +7,8 @@ main = do
     print $ size (fmap leaves (fmap (:> []) tree))
     print $ f tree
     print $ round . root . head . children . fmap (\x -> if x > 0.5 then x else 0) $ fmap (\x -> sin(fromIntegral x)) xs
+    print $ unProduct (Product 6 `mappend` (Product . unSum $ Sum 3 `mappend` Sum 4))
+    print $ unSum (mappend (Sum 5) (Sum (unProduct (mappend (Product (unSum num2)) (mappend (Product (unSum num1)) (mappend mempty (mappend (Product 2) (Product 3))))))))
 
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -70,22 +72,25 @@ newtype Sum a = Sum a
 newtype Product a = Product a
 
 instance Num a => Monoid (Sum a) where
-  mempty = error "you have to implement mempty for Sum"
-  mappend = error "you have to implement mappend for Sum"
+  mempty = Sum 0
+  mappend (Sum a) (Sum b) = Sum (a + b)
 
 instance Num a => Monoid (Product a) where
-  mempty = error "you have to implement mempty for Product"
-  mappend = error "you have to implement mappend for Product"
+  mempty = Product 1
+  mappend (Product a) (Product b) = Product (a * b)
 
 unSum :: Sum a -> a
 unSum (Sum a) = a
 unProduct :: Product a -> a
 unProduct (Product a) = a
 
+seven :: Num string => Sum string
+seven = Sum 3 `mappend` Sum 4
+
 num1 = mappend (mappend (Sum 2) (mappend (mappend mempty (Sum 1)) mempty)) (mappend (Sum 2) (Sum 1))
-  
+
 num2 = mappend (Sum 3) (mappend mempty (mappend (mappend (mappend (Sum 2) mempty) (Sum (-1))) (Sum 3)))
-  
+
 ex13 = unSum (mappend (Sum 5) (Sum (unProduct (mappend (Product (unSum num2)) (mappend (Product (unSum num1)) (mappend mempty (mappend (Product 2) (Product 3))))))))
 
 -- ===================================
@@ -96,10 +101,10 @@ class Functor f => Foldable f where
   fold :: Monoid m => f m -> m
   foldMap :: Monoid m => (a -> m) -> (f a -> m)
   foldMap = error "you have to implement foldMap"
-  
+
 instance Foldable Rose where
-  fold = error "you have to implement fold for Rose"
-  
+  fold (= error "you have to implement fold for Rose"
+
 sumxs = Sum 0 :> [Sum 13 :> [Sum 26 :> [Sum (-31) :> [Sum (-45) :> [], Sum 23 :> []]]], Sum 27 :> [], Sum 9 :> [Sum 15 :> [Sum 3 :> [Sum (-113) :> []], Sum 1 :> []], Sum 71 :> [Sum 55 :> []]]]
 
 ex15 = unSum (mappend (mappend (fold sumxs) (mappend (fold . head . drop 2 . children $ sumxs) (Sum 30))) (fold . head . children $ sumxs))
